@@ -12,10 +12,10 @@ import com.appsdeveloperblog.resttemplateerrorhandling.exception.UnAuthorizedExc
 public class RestTemplateErrorHandler implements ResponseErrorHandler {
 
     @Override
-    public boolean hasError(ClientHttpResponse httpResponse) throws IOException {
+    public boolean hasError(ClientHttpResponse response) throws IOException {
 
-        return (httpResponse.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR
-                || httpResponse.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR);
+        return (response.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR
+                || response.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.appsdeveloperblog.resttemplateerrorhandling;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withUnauthorizedRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 import com.appsdeveloperblog.resttemplateerrorhandling.exception.ServiceUnAvailableException;
@@ -28,7 +28,7 @@ import com.appsdeveloperblog.resttemplateerrorhandling.exception.UnAuthorizedExc
 public class RestTemplateErrorHandlerIntegrationTest {
 
     @Autowired
-    MockRestServiceServer server;
+    MockRestServiceServer restServiceServer;
     @Autowired
     RestTemplateBuilder builder;
     RestTemplate restTemplate;
@@ -37,7 +37,7 @@ public class RestTemplateErrorHandlerIntegrationTest {
     @BeforeAll
     public void beforeAllTests() {
         Assertions.assertNotNull(this.builder);
-        Assertions.assertNotNull(this.server);
+        Assertions.assertNotNull(this.restServiceServer);
         restTemplate = this.builder.errorHandler(new RestTemplateErrorHandler()).build();
 
     }
@@ -45,8 +45,8 @@ public class RestTemplateErrorHandlerIntegrationTest {
     @Test
     public void whenErrorIs401_thenThrowUnAuthorizedException() {
 
-        this.server.expect(ExpectedCount.once(), requestTo(URL)).andExpect(method(HttpMethod.DELETE))
-                .andRespond(withStatus(HttpStatus.UNAUTHORIZED));
+        this.restServiceServer.expect(requestTo(URL)).andExpect(method(HttpMethod.DELETE))
+                .andRespond(withUnauthorizedRequest());
 
         Assertions.assertThrows(UnAuthorizedException.class, () -> {
             restTemplate.delete(URL);
@@ -57,7 +57,7 @@ public class RestTemplateErrorHandlerIntegrationTest {
     @Test
     public void whenErrorIs503_thenThrowServiceUnAvailableException() {
 
-        this.server.expect(ExpectedCount.once(), requestTo(URL)).andExpect(method(HttpMethod.DELETE))
+        this.restServiceServer.expect(requestTo(URL)).andExpect(method(HttpMethod.DELETE))
                 .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
 
         Assertions.assertThrows(ServiceUnAvailableException.class, () -> {
