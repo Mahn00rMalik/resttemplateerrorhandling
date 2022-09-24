@@ -14,13 +14,14 @@ public class RestTemplateErrorHandler implements ResponseErrorHandler {
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
 
-        return (response.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR
-                || response.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR);
+        HttpStatus status = response.getStatusCode();
+        return status.is4xxClientError() || status.is5xxServerError();
+
     }
 
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
-        if (response.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR) {
+        if (response.getStatusCode().is5xxServerError()) {
 
             if (response.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
 
@@ -30,7 +31,7 @@ public class RestTemplateErrorHandler implements ResponseErrorHandler {
 
             // handle more server errors
 
-        } else if (response.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR) {
+        } else if (response.getStatusCode().is4xxClientError()) {
             if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 
                 throw new UnAuthorizedException();
