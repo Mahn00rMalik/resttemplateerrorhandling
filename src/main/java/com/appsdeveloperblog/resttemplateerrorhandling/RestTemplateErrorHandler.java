@@ -14,8 +14,7 @@ public class RestTemplateErrorHandler implements ResponseErrorHandler {
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
 
-        HttpStatus status = response.getStatusCode();
-        return status.is4xxClientError() || status.is5xxServerError();
+        return response.getStatusCode().is4xxClientError() || response.getStatusCode().is5xxServerError();
 
     }
 
