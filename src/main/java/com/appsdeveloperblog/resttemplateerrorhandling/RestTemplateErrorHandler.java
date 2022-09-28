@@ -10,6 +10,8 @@ import com.appsdeveloperblog.resttemplateerrorhandling.exception.UnAuthorizedExc
 
 @Component
 public class RestTemplateErrorHandler implements ResponseErrorHandler {
+    
+    
 
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
