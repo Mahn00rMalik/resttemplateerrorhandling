@@ -26,7 +26,7 @@ public class RestTemplateErrorHandler implements ResponseErrorHandler {
 
             if (response.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
 
-                throw new ServiceUnAvailableException();
+                throw new ServiceUnAvailableException("Service is currently unavailable");
 
             }
 
@@ -35,7 +35,7 @@ public class RestTemplateErrorHandler implements ResponseErrorHandler {
         } else if (response.getStatusCode().is4xxClientError()) {
             if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 
-                throw new UnAuthorizedException();
+                throw new UnAuthorizedException("Unauthorized access");
 
             }
 
