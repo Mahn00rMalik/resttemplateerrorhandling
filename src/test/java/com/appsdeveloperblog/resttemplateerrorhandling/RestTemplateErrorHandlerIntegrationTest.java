@@ -21,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
 import com.appsdeveloperblog.resttemplateerrorhandling.exception.ServiceUnAvailableException;
 import com.appsdeveloperblog.resttemplateerrorhandling.exception.UnAuthorizedException;
 
-@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { UnAuthorizedException.class, ServiceUnAvailableException.class })
 @RestClientTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
